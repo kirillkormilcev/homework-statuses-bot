@@ -18,7 +18,7 @@ public class TelegramBotConfig {
     String botPath;
 
     @Bean
-    public HomeworkStatusesBot SendingBooksToKindleBot() {
+    public HomeworkStatusesBot homeworkStatusesBot() {
         return HomeworkStatusesBot.builder()
                 .botUsername(botUsername)
                 .botToken(botToken)
