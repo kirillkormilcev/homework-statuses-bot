@@ -12,11 +12,12 @@ public class HelpHandler implements MessageHandler {
 
     private final HandlerUtil util;
     private final UserRepository userRepository;
+    private final MessageService messageService;
 
-
-    public HelpHandler(HandlerUtil util, UserRepository userRepository) {
+    public HelpHandler(HandlerUtil util, UserRepository userRepository, MessageService messageService) {
         this.util = util;
         this.userRepository = userRepository;
+        this.messageService = messageService;
     }
 
     @Override
@@ -24,7 +25,7 @@ public class HelpHandler implements MessageHandler {
         Long chatId = message.getChatId();
         userRepository.findById(message.getFrom().getId()).ifPresent(util::setCorrectStateForUser);
 
-        return new SendMessage(String.valueOf(chatId), "Помощь");
+        return new SendMessage(String.valueOf(chatId), messageService.getMessage("message.help"));
     }
 
     @Override
