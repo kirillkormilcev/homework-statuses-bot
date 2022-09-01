@@ -3,6 +3,7 @@ package app.filatov.homeworkstatusesbot.bot.handle.message;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 @Service
@@ -15,7 +16,14 @@ public class MessageService {
         this.locale = Locale.forLanguageTag(localeProperties.getTag());
     }
 
-    public String getMessage(String message) {
-        return messageSource.getMessage(message, null, locale);
+    public String getMessage(String message,String languagecode) {
+        if (Arrays.stream(Locale.getAvailableLocales())
+                .map(Locale::toLanguageTag)
+                .toList().contains(languagecode)) {
+            return messageSource.getMessage(message, null, new Locale.Builder()
+                    .setLanguageTag(languagecode)
+                    .build());
+        }
+        else return messageSource.getMessage(message,null, locale);
     }
 }

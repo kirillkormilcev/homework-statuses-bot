@@ -25,7 +25,8 @@ public class HelpHandler implements MessageHandler {
         Long chatId = message.getChatId();
         userRepository.findById(message.getFrom().getId()).ifPresent(util::setCorrectStateForUser);
 
-        return new SendMessage(String.valueOf(chatId), messageService.getMessage("message.help"));
+        return new SendMessage(String.valueOf(chatId),
+                messageService.getMessage("message.help",message.getFrom().getLanguageCode()));
     }
 
     @Override
