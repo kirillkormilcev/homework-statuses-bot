@@ -3,6 +3,10 @@ telegram:
   bot_token: ${BOT_TOKEN}}
   bot_path: ${BOT_PATH}
 
+loader:
+  url: ${LOADER_URL}
+  path: ${LOADER_PATH}
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
