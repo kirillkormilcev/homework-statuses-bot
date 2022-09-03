@@ -14,8 +14,8 @@ public class HelpHandler implements MessageHandler {
     private final HandlerUtil util;
     private final UserRepository userRepository;
     private final MessageService messageService;
-
     private final LanguageSupplier languageSupplier;
+
     public HelpHandler(HandlerUtil util, UserRepository userRepository,
                        MessageService messageService, LanguageSupplier languageSupplier) {
         this.util = util;
