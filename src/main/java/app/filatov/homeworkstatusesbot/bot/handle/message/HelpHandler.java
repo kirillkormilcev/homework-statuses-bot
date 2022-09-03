@@ -1,5 +1,6 @@
 package app.filatov.homeworkstatusesbot.bot.handle.message;
 
+import app.filatov.homeworkstatusesbot.bot.handle.language.LanguageSupplier;
 import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
 import app.filatov.homeworkstatusesbot.bot.handle.util.HandlerUtil;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
@@ -14,10 +15,13 @@ public class HelpHandler implements MessageHandler {
     private final UserRepository userRepository;
     private final MessageService messageService;
 
-    public HelpHandler(HandlerUtil util, UserRepository userRepository, MessageService messageService) {
+    private final LanguageSupplier languageSupplier;
+    public HelpHandler(HandlerUtil util, UserRepository userRepository,
+                       MessageService messageService, LanguageSupplier languageSupplier) {
         this.util = util;
         this.userRepository = userRepository;
         this.messageService = messageService;
+        this.languageSupplier = languageSupplier;
     }
 
     @Override
@@ -26,7 +30,7 @@ public class HelpHandler implements MessageHandler {
         userRepository.findById(message.getFrom().getId()).ifPresent(util::setCorrectStateForUser);
 
         return new SendMessage(String.valueOf(chatId),
-                messageService.getMessage("message.help",message.getFrom().getLanguageCode()));
+                messageService.getMessage("message.help",languageSupplier.getLanguage(message)));
     }
 
     @Override
