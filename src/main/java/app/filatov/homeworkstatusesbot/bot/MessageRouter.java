@@ -2,7 +2,10 @@ package app.filatov.homeworkstatusesbot.bot;
 
 import app.filatov.homeworkstatusesbot.bot.handle.state.StateRouter;
 import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
+import app.filatov.homeworkstatusesbot.model.Setting;
+import app.filatov.homeworkstatusesbot.model.SettingCompositeKey;
 import app.filatov.homeworkstatusesbot.model.User;
+import app.filatov.homeworkstatusesbot.model.repository.SettingRepository;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -15,10 +18,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class MessageRouter {
     private final UserRepository userRepository;
     private final StateRouter stateRouter;
+    private final SettingRepository settingRepository;
 
-    public MessageRouter(UserRepository userRepository, StateRouter stateRouter) {
+    public MessageRouter(UserRepository userRepository,
+                         StateRouter stateRouter,
+                         SettingRepository settingRepository) {
         this.userRepository = userRepository;
         this.stateRouter = stateRouter;
+        this.settingRepository = settingRepository;
     }
 
     public SendMessage handleUpdate(Update update) {
@@ -53,6 +60,19 @@ public class MessageRouter {
 
         user.setState(state);
         userRepository.save(user);
+
+        // Сохраняем по умолчанию настройки для пользователя
+        settingRepository.save(Setting.builder().settingCompositeKey(SettingCompositeKey.builder()
+                        .user(user)
+                        .key("UPDATED")
+                        .build())
+                .value("true").build());
+
+        settingRepository.save(Setting.builder().settingCompositeKey(SettingCompositeKey.builder()
+                        .user(user)
+                        .key("LANGUAGE_CODE")
+                        .build())
+                .value(message.getFrom().getLanguageCode()).build());
 
         return stateRouter.process(state, message);
     }

@@ -15,6 +15,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User set state = 'ERROR' where id = :id")
     void setErrorStatus(@Param("id") Long id);
 
-    @Query("select user from User user where user.state = 'READY'")
+    @Query("""
+            SELECT u FROM User u
+            JOIN Setting s ON u = s.settingCompositeKey.user
+            WHERE s.settingCompositeKey.key = 'UPDATED' AND s.value = 'true'
+            AND u.state = 'READY'
+            """)
     List<User> findReadyToUpdateUser();
 }

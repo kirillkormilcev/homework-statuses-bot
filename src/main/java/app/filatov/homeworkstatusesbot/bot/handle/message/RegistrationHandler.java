@@ -5,6 +5,7 @@ import app.filatov.homeworkstatusesbot.bot.handle.util.HandlerUtil;
 import app.filatov.homeworkstatusesbot.exception.UserNotFoundException;
 import app.filatov.homeworkstatusesbot.model.User;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
+import app.filatov.homeworkstatusesbot.service.loader.LoaderService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -17,9 +18,14 @@ public class RegistrationHandler implements MessageHandler {
 
     private final UserRepository userRepository;
 
-    public RegistrationHandler(HandlerUtil util, UserRepository userRepository) {
+    private final LoaderService loaderService;
+
+    public RegistrationHandler(HandlerUtil util,
+                               UserRepository userRepository,
+                               LoaderService loaderService) {
         this.util = util;
         this.userRepository = userRepository;
+        this.loaderService = loaderService;
     }
 
     @Override
@@ -49,6 +55,12 @@ public class RegistrationHandler implements MessageHandler {
 
         if (user.getState() == UserState.CHECK_API_KEY) {
             user.setApiKey(message.getText());
+            try {
+                loaderService.getHomeworks(user);
+            } catch (Exception e) {
+                user.setState(UserState.ASK_API_KEY);
+                return new SendMessage(String.valueOf(chatId), "Некорректный токен, введите токен повторно");
+            }
             user.setState(UserState.READY);
             userRepository.save(user);
         }

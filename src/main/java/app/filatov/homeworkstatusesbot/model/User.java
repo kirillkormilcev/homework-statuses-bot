@@ -18,7 +18,6 @@ import java.util.Objects;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     private Long id;
 
     @Column(name = "first_name")
