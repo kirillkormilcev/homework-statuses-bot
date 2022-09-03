@@ -16,12 +16,12 @@ public class MessageService {
         this.locale = Locale.forLanguageTag(localeProperties.getTag());
     }
 
-    public String getMessage(String message,String languagecode) {
+    public String getMessage(String message,String languageCode) {
         if (Arrays.stream(Locale.getAvailableLocales())
                 .map(Locale::toLanguageTag)
-                .toList().contains(languagecode)) {
+                .toList().contains(languageCode)) {
             String sourceMessage = messageSource.getMessage(message, null, new Locale.Builder()
-                    .setLanguageTag(languagecode)
+                    .setLanguageTag(languageCode)
                     .build());
             return sourceMessage;
         }
