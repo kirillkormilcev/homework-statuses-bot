@@ -1,10 +1,11 @@
 package app.filatov.homeworkstatusesbot.model;
 
-import app.filatov.homeworkstatusesbot.bot.handle.state.BotState;
+import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -13,26 +14,37 @@ import java.util.Objects;
 @DynamicUpdate
 @Table(name = "users")
 @Builder(toBuilder = true)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
     private Long id;
 
-    @Column
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column
+    @Column(name = "user_name")
     private String userName;
 
-    @Column
+    @Column(name = "api_key")
     private String apiKey;
 
+    @Column(name = "api_type")
+    private String apiType;
+
     @Enumerated(EnumType.STRING)
-    private BotState state;
+    private UserState state;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Homework> homeworks;
+
+    @PrePersist
+    void onCreate() {
+        apiType = "OAuth";
+    }
 
     @Override
     public boolean equals(Object o) {

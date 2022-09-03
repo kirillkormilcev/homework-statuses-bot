@@ -12,23 +12,24 @@ import java.util.Map;
 @Component
 public class StateRouter {
 
-    private final Map<BotState, MessageHandler> handlers = new HashMap<>();
+    private final Map<UserState, MessageHandler> handlers = new HashMap<>();
 
     public StateRouter(List<MessageHandler> handlers) {
         handlers.forEach(handler -> this.handlers.put(handler.getHandlerType(), handler));
     }
 
-    public SendMessage process(BotState state, Message message) {
+    public SendMessage process(UserState state, Message message) {
         MessageHandler messageHandler = handlers.get(getHandlerFamily(state));
         return messageHandler.handle(message);
     }
 
-    private BotState getHandlerFamily(BotState state) {
+    private UserState getHandlerFamily(UserState state) {
         return switch (state) {
-            case REGISTRATION, ASK_API_KEY, CHECK_API_KEY -> BotState.REGISTRATION;
-            case READY -> BotState.READY;
-            case SETTINGS -> BotState.SETTINGS;
-            case HELP -> BotState.HELP;
+            case REGISTRATION, ASK_API_KEY, CHECK_API_KEY -> UserState.REGISTRATION;
+            case READY -> UserState.READY;
+            case SETTINGS -> UserState.SETTINGS;
+            case HELP -> UserState.HELP;
+            case ERROR -> UserState.ERROR;
         };
     }
 }

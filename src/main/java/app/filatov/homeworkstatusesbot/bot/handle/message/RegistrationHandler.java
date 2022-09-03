@@ -1,10 +1,11 @@
 package app.filatov.homeworkstatusesbot.bot.handle.message;
 
-import app.filatov.homeworkstatusesbot.bot.handle.state.BotState;
+import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
 import app.filatov.homeworkstatusesbot.bot.handle.util.HandlerUtil;
 import app.filatov.homeworkstatusesbot.exception.UserNotFoundException;
 import app.filatov.homeworkstatusesbot.model.User;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
+import app.filatov.homeworkstatusesbot.service.loader.LoaderService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -17,9 +18,14 @@ public class RegistrationHandler implements MessageHandler {
 
     private final UserRepository userRepository;
 
-    public RegistrationHandler(HandlerUtil util, UserRepository userRepository) {
+    private final LoaderService loaderService;
+
+    public RegistrationHandler(HandlerUtil util,
+                               UserRepository userRepository,
+                               LoaderService loaderService) {
         this.util = util;
         this.userRepository = userRepository;
+        this.loaderService = loaderService;
     }
 
     @Override
@@ -36,20 +42,26 @@ public class RegistrationHandler implements MessageHandler {
             return new SendMessage(String.valueOf(chatId), "Токен уже был зарегистрирован");
         }
 
-        if (user.getState() == BotState.REGISTRATION) {
-            user.setState(BotState.ASK_API_KEY);
+        if (user.getState() == UserState.REGISTRATION) {
+            user.setState(UserState.ASK_API_KEY);
             userRepository.save(user);
         }
 
-        if (user.getState() == BotState.ASK_API_KEY) {
-            user.setState(BotState.CHECK_API_KEY);
+        if (user.getState() == UserState.ASK_API_KEY) {
+            user.setState(UserState.CHECK_API_KEY);
             userRepository.save(user);
             return new SendMessage(String.valueOf(chatId), "Введите токен");
         }
 
-        if (user.getState() == BotState.CHECK_API_KEY) {
+        if (user.getState() == UserState.CHECK_API_KEY) {
             user.setApiKey(message.getText());
-            user.setState(BotState.READY);
+            try {
+                loaderService.getHomeworks(user);
+            } catch (Exception e) {
+                user.setState(UserState.ASK_API_KEY);
+                return new SendMessage(String.valueOf(chatId), "Некорректный токен, введите токен повторно");
+            }
+            user.setState(UserState.READY);
             userRepository.save(user);
         }
 
@@ -57,7 +69,7 @@ public class RegistrationHandler implements MessageHandler {
     }
 
     @Override
-    public BotState getHandlerType() {
-        return BotState.REGISTRATION;
+    public UserState getHandlerType() {
+        return UserState.REGISTRATION;
     }
 }

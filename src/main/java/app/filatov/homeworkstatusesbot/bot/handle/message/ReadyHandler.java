@@ -1,6 +1,6 @@
 package app.filatov.homeworkstatusesbot.bot.handle.message;
 
-import app.filatov.homeworkstatusesbot.bot.handle.state.BotState;
+import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
 import app.filatov.homeworkstatusesbot.bot.handle.util.HandlerUtil;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class ReadyHandler implements MessageHandler {
     }
 
     @Override
-    public BotState getHandlerType() {
-        return BotState.READY;
+    public UserState getHandlerType() {
+        return UserState.READY;
     }
 }

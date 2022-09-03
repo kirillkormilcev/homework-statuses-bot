@@ -1,6 +1,6 @@
 package app.filatov.homeworkstatusesbot.bot.handle.util;
 
-import app.filatov.homeworkstatusesbot.bot.handle.state.BotState;
+import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
 import app.filatov.homeworkstatusesbot.model.User;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -15,9 +15,9 @@ public class HandlerUtil {
 
     public void setCorrectStateForUser(User user) {
         if (user.getApiKey() != null) {
-            user.setState(BotState.READY);
+            user.setState(UserState.READY);
         } else {
-            user.setState(BotState.REGISTRATION);
+            user.setState(UserState.REGISTRATION);
         }
         userRepository.save(user);
     }
