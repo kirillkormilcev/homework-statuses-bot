@@ -3,6 +3,7 @@ package app.filatov.homeworkstatusesbot.model;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -18,5 +19,7 @@ import javax.persistence.Table;
 public class Setting {
     @EmbeddedId
     private SettingCompositeKey settingCompositeKey;
+
+    @Column
     private String value;
 }
