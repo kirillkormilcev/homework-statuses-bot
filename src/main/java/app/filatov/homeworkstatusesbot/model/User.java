@@ -1,6 +1,6 @@
 package app.filatov.homeworkstatusesbot.model;
 
-import app.filatov.homeworkstatusesbot.bot.handle.state.BotState;
+import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -37,7 +37,7 @@ public class User {
     private String apiType;
 
     @Enumerated(EnumType.STRING)
-    private BotState state;
+    private UserState state;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Homework> homeworks;

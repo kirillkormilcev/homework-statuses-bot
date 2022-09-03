@@ -1,7 +1,7 @@
 package app.filatov.homeworkstatusesbot.bot;
 
-import app.filatov.homeworkstatusesbot.bot.handle.state.BotState;
 import app.filatov.homeworkstatusesbot.bot.handle.state.StateRouter;
+import app.filatov.homeworkstatusesbot.bot.handle.state.UserState;
 import app.filatov.homeworkstatusesbot.model.User;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
@@ -40,14 +40,14 @@ public class MessageRouter {
                 .firstName(message.getFrom().getFirstName())
                 .lastName(message.getFrom().getLastName())
                 .userName(message.getFrom().getUserName())
-                .state(BotState.REGISTRATION)
+                .state(UserState.REGISTRATION)
                 .build())
         );
 
-        BotState state = switch (text) {
-            case "/start" -> BotState.REGISTRATION;
-            case "/settings" -> BotState.SETTINGS;
-            case "/help" -> BotState.HELP;
+        UserState state = switch (text) {
+            case "/start" -> UserState.REGISTRATION;
+            case "/settings" -> UserState.SETTINGS;
+            case "/help" -> UserState.HELP;
             default -> user.getState();
         };
 
