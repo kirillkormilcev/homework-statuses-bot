@@ -26,10 +26,10 @@ public class Homework {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "homework_name")
+    @Column(name = "homework_name", length = 1024)
     private String homeworkName;
 
-    @Column(name = "reviewer_comment")
+    @Column(name = "reviewer_comment", length = 8192)
     private String reviewerComment;
 
     @Column(name = "date_updated")
