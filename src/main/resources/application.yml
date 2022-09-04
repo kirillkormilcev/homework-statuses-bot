@@ -2,3 +2,22 @@ telegram:
   bot_username: ${BOT_USERNAME}
   bot_token: ${BOT_TOKEN}}
   bot_path: ${BOT_PATH}
+
+loader:
+  url: ${LOADER_URL}
+  path: ${LOADER_PATH}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+locale:
+  tag: ru-RU
