@@ -16,7 +16,7 @@ public class MessageService {
         this.locale = Locale.forLanguageTag(localeProperties.getTag());
     }
 
-    public String getMessage(String message,String languageCode) {
+    public String getMessage(String message, String languageCode) {
         if (Arrays.stream(Locale.getAvailableLocales())
                 .map(Locale::toLanguageTag)
                 .toList().contains(languageCode)) {
@@ -24,7 +24,6 @@ public class MessageService {
                     .setLanguageTag(languageCode)
                     .build());
             return sourceMessage;
-        }
-        else return messageSource.getMessage(message,null, locale);
+        } else return messageSource.getMessage(message, null, locale);
     }
 }

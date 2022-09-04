@@ -14,24 +14,25 @@ import java.util.Optional;
 
 @Component
 @Primary
-public class DBLanguageSupplier implements LanguageSupplier{
+public class DBLanguageSupplier implements LanguageSupplier {
     UserRepository userRepository;
     SettingRepository settingRepository;
-    public  DBLanguageSupplier(UserRepository userRepository, SettingRepository settingRepository){
+
+    public DBLanguageSupplier(UserRepository userRepository, SettingRepository settingRepository) {
         this.userRepository = userRepository;
         this.settingRepository = settingRepository;
     }
+
     @Override
     public String getLanguage(Message message) {
         Long id = message.getChatId();
-        Optional<User> user= userRepository.findById(id);
-        if (user.isPresent()){
-        Optional<Setting> userSettings = settingRepository.findById(SettingCompositeKey.builder()
-                        .user(user.get()).key("LANGUAGE_CODE").build());
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            Optional<Setting> userSettings = settingRepository.findById(SettingCompositeKey.builder()
+                    .user(user.get()).key("LANGUAGE_CODE").build());
 
             return userSettings.get().getValue();
-        }
-        else {
+        } else {
             throw new UserNotFoundException("Пользователь не найден");
         }
     }
