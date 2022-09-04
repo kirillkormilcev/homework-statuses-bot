@@ -6,9 +6,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
 public class MessageLanguageSupplier implements LanguageSupplier {
+    private final LanguageConverter languageConverter;
+
+    public MessageLanguageSupplier(LanguageConverter languageConverter) {
+        this.languageConverter = languageConverter;
+    }
 
     @Override
     public String getLanguage(Message message) {
-        return message.getFrom().getLanguageCode();
+        return languageConverter.getLanguageCode(message.getFrom().getLanguageCode());
     }
 }
