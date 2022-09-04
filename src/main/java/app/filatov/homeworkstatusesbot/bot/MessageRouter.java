@@ -42,13 +42,29 @@ public class MessageRouter {
         Long id = message.getFrom().getId();
         log.info("Получено сообщение от пользователя с id={}: {}", id, text);
 
-        User user = userRepository.findById(id).orElseGet(() -> userRepository.save(User.builder()
-                .id(id)
-                .firstName(message.getFrom().getFirstName())
-                .lastName(message.getFrom().getLastName())
-                .userName(message.getFrom().getUserName())
-                .state(UserState.REGISTRATION)
-                .build())
+        User user = userRepository.findById(id).orElseGet(() -> {
+                    User newUser = userRepository.save(User.builder()
+                            .id(id)
+                            .firstName(message.getFrom().getFirstName())
+                            .lastName(message.getFrom().getLastName())
+                            .userName(message.getFrom().getUserName())
+                            .state(UserState.REGISTRATION)
+                            .build());
+                    // Сохраняем по умолчанию настройки для пользователя
+                    settingRepository.save(Setting.builder().settingCompositeKey(SettingCompositeKey.builder()
+                                    .user(newUser)
+                                    .key("UPDATED")
+                                    .build())
+                            .value("true").build());
+
+                    settingRepository.save(Setting.builder().settingCompositeKey(SettingCompositeKey.builder()
+                                    .user(newUser)
+                                    .key("LANGUAGE_CODE")
+                                    .build())
+                            .value(message.getFrom().getLanguageCode()).build());
+
+                    return newUser;
+                }
         );
 
         UserState state = switch (text) {
@@ -60,19 +76,6 @@ public class MessageRouter {
 
         user.setState(state);
         userRepository.save(user);
-
-        // Сохраняем по умолчанию настройки для пользователя
-        settingRepository.save(Setting.builder().settingCompositeKey(SettingCompositeKey.builder()
-                        .user(user)
-                        .key("UPDATED")
-                        .build())
-                .value("true").build());
-
-        settingRepository.save(Setting.builder().settingCompositeKey(SettingCompositeKey.builder()
-                        .user(user)
-                        .key("LANGUAGE_CODE")
-                        .build())
-                .value(message.getFrom().getLanguageCode()).build());
 
         return stateRouter.process(state, message);
     }

@@ -15,12 +15,16 @@ import java.util.Optional;
 @Component
 @Primary
 public class DBLanguageSupplier implements LanguageSupplier {
-    UserRepository userRepository;
-    SettingRepository settingRepository;
+    private final UserRepository userRepository;
+    private final SettingRepository settingRepository;
+    private final LanguageConverter languageConverter;
 
-    public DBLanguageSupplier(UserRepository userRepository, SettingRepository settingRepository) {
+    public DBLanguageSupplier(UserRepository userRepository,
+                              SettingRepository settingRepository,
+                              LanguageConverter languageConverter) {
         this.userRepository = userRepository;
         this.settingRepository = settingRepository;
+        this.languageConverter = languageConverter;
     }
 
     @Override
@@ -31,7 +35,7 @@ public class DBLanguageSupplier implements LanguageSupplier {
             Optional<Setting> userSettings = settingRepository.findById(SettingCompositeKey.builder()
                     .user(user.get()).key("LANGUAGE_CODE").build());
 
-            return userSettings.get().getValue();
+            return languageConverter.getLanguageCode(userSettings.get().getValue());
         } else {
             throw new UserNotFoundException("Пользователь не найден");
         }
