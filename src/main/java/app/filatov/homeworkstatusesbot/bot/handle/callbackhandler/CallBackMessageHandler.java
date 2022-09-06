@@ -1,5 +1,6 @@
 package app.filatov.homeworkstatusesbot.bot.handle.callbackhandler;
 
+import app.filatov.homeworkstatusesbot.bot.handle.texthandler.state.UserState;
 import app.filatov.homeworkstatusesbot.exception.UserNotFoundException;
 import app.filatov.homeworkstatusesbot.model.Setting;
 import app.filatov.homeworkstatusesbot.model.SettingCompositeKey;
@@ -67,6 +68,11 @@ public class CallBackMessageHandler {
                                 .build())
                         .value("false").build());
                 yield sendAnswerCallbackQuery("Вы отписались от обновления статуса проверки ДЗ", callbackQuery);
+            }
+            case "RECALL_API_KEY" ->{
+                user.setApiKey(null);
+                user.setState(UserState.REGISTRATION);
+                yield sendAnswerCallbackQuery("Вы отозвали API-key",callbackQuery);
             }
             default -> null;
         };

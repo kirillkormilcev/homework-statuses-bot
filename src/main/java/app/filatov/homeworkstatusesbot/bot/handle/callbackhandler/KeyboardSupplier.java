@@ -47,13 +47,15 @@ public class KeyboardSupplier {
         List<InlineKeyboardButton> keyboardButtonsFirstRow = new ArrayList<>();
         // Второй ряд кнопок
         List<InlineKeyboardButton> keyboardButtonsSecondRow = new ArrayList<>();
+        // Третий ряд кнопок
+        List<InlineKeyboardButton> keyboardButtonsThirdRow = new ArrayList<>();
 
-        // Установка английского языка для бота
+        // Установка русского языка для бота
         InlineKeyboardButton englishLanguageButton = new InlineKeyboardButton();
         englishLanguageButton.setText("Русский");
         englishLanguageButton.setCallbackData("SET_RUSSIAN_LANGUAGE");
 
-        // Установка русского языка для бота
+        // Установка английского языка для бота
         InlineKeyboardButton russianLanguageButton = new InlineKeyboardButton();
         russianLanguageButton.setText("English");
         russianLanguageButton.setCallbackData("SET_ENGLISH_LANGUAGE");
@@ -76,8 +78,17 @@ public class KeyboardSupplier {
         keyboardButtonsSecondRow.add(enabledUpdateButton);
         keyboardButtonsSecondRow.add(disableUpdateButton);
 
+        // Отзыв АPI-key
+        InlineKeyboardButton recallApiKey = new InlineKeyboardButton();
+        recallApiKey.setText("Отозвать API-key");
+        recallApiKey.setCallbackData("RECALL_API_KEY");
+
+        // Добавляем кнопку отзыва API-key на третий ряд клавиатуры
+        keyboardButtonsThirdRow.add(recallApiKey);
+
         // Добавляем ряды кнопок на клавиатуру
-        settingsKeyboardMarkup.setKeyboard(List.of(keyboardButtonsFirstRow, keyboardButtonsSecondRow));
+        settingsKeyboardMarkup
+                .setKeyboard(List.of(keyboardButtonsFirstRow, keyboardButtonsSecondRow,keyboardButtonsThirdRow));
 
         return settingsKeyboardMarkup;
     }
