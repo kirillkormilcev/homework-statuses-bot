@@ -1,5 +1,6 @@
 package app.filatov.homeworkstatusesbot.bot.handle.callbackhandler;
 
+import app.filatov.homeworkstatusesbot.bot.handle.texthandler.message.MessageService;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +21,10 @@ import java.util.List;
 public class KeyboardSupplier {
     String url;
 
-    public InlineKeyboardMarkup getApiKeyLinkButtonMarkup() {
+    private final MessageService messageService;
+
+
+    public InlineKeyboardMarkup getApiKeyLinkButtonMarkup(String language) {
         // Клавиатура с кнопкой-ссылкой на получение API-KEY
         InlineKeyboardMarkup settingsKeyboardMarkup = new InlineKeyboardMarkup();
         // Первый ряд кнопок
@@ -28,7 +32,7 @@ public class KeyboardSupplier {
 
         // Кнопка-ссылка
         InlineKeyboardButton apiKeyLinkButton = new InlineKeyboardButton();
-        apiKeyLinkButton.setText("Получить API-KEY");
+        apiKeyLinkButton.setText(messageService.getMessage("message.help.button",language));
         apiKeyLinkButton.setCallbackData("GET_API_KEY");
         apiKeyLinkButton.setUrl(url);
 
@@ -39,7 +43,7 @@ public class KeyboardSupplier {
         return settingsKeyboardMarkup;
     }
 
-    public InlineKeyboardMarkup getSettingsButtonsMarkup() {
+    public InlineKeyboardMarkup getSettingsButtonsMarkup(String language) {
         // Клавиатура настройки языка и подписки на обновления статуса проверки ДЗ
         InlineKeyboardMarkup settingsKeyboardMarkup = new InlineKeyboardMarkup();
 
@@ -52,12 +56,14 @@ public class KeyboardSupplier {
 
         // Установка русского языка для бота
         InlineKeyboardButton englishLanguageButton = new InlineKeyboardButton();
-        englishLanguageButton.setText("Русский");
+        englishLanguageButton.setText(messageService
+                .getMessage("message.setting.buttons.russian",language));
         englishLanguageButton.setCallbackData("SET_RUSSIAN_LANGUAGE");
 
         // Установка английского языка для бота
         InlineKeyboardButton russianLanguageButton = new InlineKeyboardButton();
-        russianLanguageButton.setText("English");
+        russianLanguageButton.setText(messageService
+                .getMessage("message.setting.buttons.english",language));
         russianLanguageButton.setCallbackData("SET_ENGLISH_LANGUAGE");
 
         // Добавляем кнопки настройки на первый ряд клавиатуры
@@ -66,12 +72,14 @@ public class KeyboardSupplier {
 
         // Подписка на обновления
         InlineKeyboardButton enabledUpdateButton = new InlineKeyboardButton();
-        enabledUpdateButton.setText("Подписаться");
+        enabledUpdateButton.setText(messageService
+                .getMessage("message.setting.buttons.subscribe",language));
         enabledUpdateButton.setCallbackData("ENABLED_UPDATE");
 
         // Отписка от обновлений
         InlineKeyboardButton disableUpdateButton = new InlineKeyboardButton();
-        disableUpdateButton.setText("Отписаться");
+        disableUpdateButton.setText(messageService
+                .getMessage("message.setting.buttons.unsubscribe",language));
         disableUpdateButton.setCallbackData("DISABLE_UPDATE");
 
         // Добавляем кнопки настройки на второй ряд клавиатуры
@@ -80,7 +88,8 @@ public class KeyboardSupplier {
 
         // Отзыв АPI-key
         InlineKeyboardButton recallApiKey = new InlineKeyboardButton();
-        recallApiKey.setText("Отозвать API-key");
+        recallApiKey.setText(messageService
+                .getMessage("message.setting.buttons.recallKey",language));
         recallApiKey.setCallbackData("RECALL_API_KEY");
 
         // Добавляем кнопку отзыва API-key на третий ряд клавиатуры

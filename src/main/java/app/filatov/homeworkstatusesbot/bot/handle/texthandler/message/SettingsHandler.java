@@ -36,7 +36,7 @@ public class SettingsHandler implements MessageHandler {
 
         SendMessage sendMessage = new SendMessage(String.valueOf(chatId),
                 messageService.getMessage("message.settings", languageSupplier.getLanguage(message)));
-        sendMessage.setReplyMarkup(keyboardSupplier.getSettingsButtonsMarkup());
+        sendMessage.setReplyMarkup(keyboardSupplier.getSettingsButtonsMarkup(languageSupplier.getLanguage(message)));
         return sendMessage;
     }
 
