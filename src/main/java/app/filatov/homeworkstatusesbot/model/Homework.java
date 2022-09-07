@@ -38,7 +38,32 @@ public class Homework {
     @Column(name = "lesson_name")
     private String lessonName;
 
+    @Column(name = "hash")
+    private int hash;
+    //todo для наглядности, можно убрать поле, equals работает и так
+
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Homework homework = (Homework) o;
+        return Objects.equals(id, homework.id) && Objects.equals(status, homework.status) && Objects.equals(reviewerComment, homework.reviewerComment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, status, reviewerComment);
+    }
+
+    @Override
+    public String toString() {
+        return "Домашняя работа " + homeworkName + "\n" +
+                "статус: " + status + "\n" +
+                "комментарий ревьюера: " + reviewerComment + "\n" +
+                "обновлено: " + dateUpdated + "." + "\n";
+    }
+
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -46,10 +71,10 @@ public class Homework {
         Homework homework = (Homework) o;
 
         return Objects.equals(id, homework.id);
-    }
+    }*/
 
-    @Override
+   /* @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
-    }
+    }*/
 }

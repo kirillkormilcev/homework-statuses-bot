@@ -1,6 +1,6 @@
 telegram:
   bot_username: ${BOT_USERNAME}
-  bot_token: ${BOT_TOKEN}}
+  bot_token: ${BOT_TOKEN}
   bot_path: ${BOT_PATH}
 
 api:
@@ -19,7 +19,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 locale:
