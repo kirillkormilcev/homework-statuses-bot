@@ -35,6 +35,9 @@ public class User {
     @Column(name = "api_type")
     private String apiType;
 
+    @Column(name = "chat_id")
+    private Long chatId;
+
     @Enumerated(EnumType.STRING)
     private UserState state;
 
