@@ -1,5 +1,8 @@
 package app.filatov.homeworkstatusesbot.bot.handle.callbackhandler;
 
+import app.filatov.homeworkstatusesbot.bot.handle.language.LanguageConverter;
+import app.filatov.homeworkstatusesbot.bot.handle.texthandler.message.MessageService;
+import app.filatov.homeworkstatusesbot.bot.handle.texthandler.state.UserState;
 import app.filatov.homeworkstatusesbot.exception.UserNotFoundException;
 import app.filatov.homeworkstatusesbot.model.Setting;
 import app.filatov.homeworkstatusesbot.model.SettingCompositeKey;
@@ -20,10 +23,16 @@ public class CallBackMessageHandler {
     private final UserRepository userRepository;
     private final SettingRepository settingRepository;
 
+    private final LanguageConverter languageConverter;
+
+    private final MessageService messageService;
+
     public CallBackMessageHandler(UserRepository userRepository,
-                                  SettingRepository settingRepository) {
+                                  SettingRepository settingRepository, LanguageConverter languageConverter, MessageService messageService) {
         this.userRepository = userRepository;
         this.settingRepository = settingRepository;
+        this.languageConverter = languageConverter;
+        this.messageService = messageService;
     }
 
     public BotApiMethod<?> callBackMessageProvide(CallbackQuery callbackQuery) {
@@ -58,7 +67,12 @@ public class CallBackMessageHandler {
                                 .key("UPDATED")
                                 .build())
                         .value("true").build());
-                yield sendAnswerCallbackQuery("Вы подписались на обновления статуса проверки ДЗ", callbackQuery);
+                yield sendAnswerCallbackQuery(messageService.getMessage("message.settings.subscribe",
+                                languageConverter.getLanguageCode(String.valueOf(settingRepository.findById(SettingCompositeKey.builder()
+                                        .user(user)
+                                        .key("LANGUAGE_CODE")
+                                        .build()))))
+                        , callbackQuery);
             }
             case "DISABLE_UPDATE" -> {
                 settingRepository.save(Setting.builder().settingCompositeKey(SettingCompositeKey.builder()
@@ -66,7 +80,23 @@ public class CallBackMessageHandler {
                                 .key("UPDATED")
                                 .build())
                         .value("false").build());
-                yield sendAnswerCallbackQuery("Вы отписались от обновления статуса проверки ДЗ", callbackQuery);
+                yield sendAnswerCallbackQuery(messageService.getMessage("message.settings.unsubscribe",
+                                languageConverter.getLanguageCode(String.valueOf(settingRepository.findById(SettingCompositeKey.builder()
+                                        .user(user)
+                                        .key("LANGUAGE_CODE")
+                                        .build()))))
+                        , callbackQuery);
+            }
+            case "RECALL_API_KEY" -> {
+                user.setApiKey(null);
+                user.setState(UserState.REGISTRATION);
+                userRepository.save(user);
+                yield sendAnswerCallbackQuery(messageService.getMessage("message.settings.recall",
+                                languageConverter.getLanguageCode(String.valueOf(settingRepository.findById(SettingCompositeKey.builder()
+                                        .user(user)
+                                        .key("LANGUAGE_CODE")
+                                        .build()))))
+                        , callbackQuery);
             }
             default -> null;
         };

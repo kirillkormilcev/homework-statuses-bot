@@ -1,6 +1,7 @@
 package app.filatov.homeworkstatusesbot.bot.handle.texthandler.message;
 
 import app.filatov.homeworkstatusesbot.bot.handle.callbackhandler.KeyboardSupplier;
+import app.filatov.homeworkstatusesbot.bot.handle.language.LanguageSupplier;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.state.UserState;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.util.HandlerUtil;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
@@ -14,12 +15,18 @@ public class SettingsHandler implements MessageHandler {
     private final UserRepository userRepository;
     private final KeyboardSupplier keyboardSupplier;
 
+    private final LanguageSupplier languageSupplier;
+
+    private final MessageService messageService;
+
     public SettingsHandler(HandlerUtil util,
                            UserRepository userRepository,
-                           KeyboardSupplier keyboardSupplier) {
+                           KeyboardSupplier keyboardSupplier, LanguageSupplier languageSupplier, MessageService messageService) {
         this.util = util;
         this.userRepository = userRepository;
         this.keyboardSupplier = keyboardSupplier;
+        this.languageSupplier = languageSupplier;
+        this.messageService = messageService;
     }
 
     @Override
@@ -27,8 +34,9 @@ public class SettingsHandler implements MessageHandler {
         Long chatId = message.getChatId();
         userRepository.findById(message.getFrom().getId()).ifPresent(util::setCorrectStateForUser);
 
-        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), "Настройки");
-        sendMessage.setReplyMarkup(keyboardSupplier.getSettingsButtonsMarkup());
+        SendMessage sendMessage = new SendMessage(String.valueOf(chatId),
+                messageService.getMessage("message.settings", languageSupplier.getLanguage(message)));
+        sendMessage.setReplyMarkup(keyboardSupplier.getSettingsButtonsMarkup(languageSupplier.getLanguage(message)));
         return sendMessage;
     }
 
