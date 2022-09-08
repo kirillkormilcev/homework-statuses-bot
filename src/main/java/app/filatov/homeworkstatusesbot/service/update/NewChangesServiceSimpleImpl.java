@@ -27,7 +27,7 @@ public class NewChangesServiceSimpleImpl implements NewChangesService{
     @Override
     public void checkChangesInHomeworks(List<Homework> homeworks, long userId) {
         List<Homework> homeworksOld = homeworkRepository.findHomeworkByUserId(userId);
-        //homeworks.get(0).setStatus("rejected"); //todo для проверки, вкл-выкл эту строку
+        //homeworks.get(0).setStatus("teststatus"); //todo для проверки, вкл-выкл эту строку
         List<Homework> newHomeworks = new ArrayList<>(homeworks);
         if (homeworksOld.size() < homeworks.size()) {
             log.info("Появилась новые домашние работы");
@@ -59,11 +59,20 @@ public class NewChangesServiceSimpleImpl implements NewChangesService{
         } else {
             log.warn("Пользователь {} не найден.", userId);
         }
-        message.setText(msg + "\n" + newHomeworks.toString());
+        message.setText(msg + "\n" + listToString(newHomeworks));
+        message.disableWebPagePreview();
         try {
             bot.execute(message);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    private String listToString(List<Homework> homeworks) {
+        StringBuilder listToString = new StringBuilder();
+        for (Homework homework: homeworks) {
+            listToString.append(homework.toString());
+        }
+        return listToString.toString();
     }
 }
