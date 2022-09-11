@@ -63,7 +63,6 @@ public class Homework {
                 "обновлено: " + dateUpdated + "." + "\n";
     }
 
-
     /*@Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,6 +77,4 @@ public class Homework {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }*/
-
-
 }

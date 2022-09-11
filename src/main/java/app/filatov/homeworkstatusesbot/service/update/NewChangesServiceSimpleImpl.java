@@ -4,7 +4,6 @@ import app.filatov.homeworkstatusesbot.bot.HomeworkStatusesBot;
 import app.filatov.homeworkstatusesbot.model.Homework;
 import app.filatov.homeworkstatusesbot.model.repository.HomeworkRepository;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,13 +15,24 @@ import java.util.List;
 
 @Log4j2
 @Service
-@RequiredArgsConstructor
 public class NewChangesServiceSimpleImpl implements NewChangesService{
     private final HomeworkRepository homeworkRepository;
     private final UserRepository userRepository;
+    private final HomeworkStatusesBot bot;
+
     String botUsername = System.getenv("BOT_USERNAME");
     String botToken = System.getenv("BOT_TOKEN");
     String botPath = System.getenv("BOT_PATH");
+    public NewChangesServiceSimpleImpl (HomeworkRepository homeworkRepository,
+                                        UserRepository userRepository) {
+        this.homeworkRepository = homeworkRepository;
+        this.userRepository = userRepository;
+        this.bot = HomeworkStatusesBot.builder()
+                .botUsername(botUsername)
+                .botToken(botToken)
+                .botPath(botPath)
+                .build();
+    }
 
     @Override
     public void checkChangesInHomeworks(List<Homework> homeworks, long userId) {
@@ -48,11 +58,6 @@ public class NewChangesServiceSimpleImpl implements NewChangesService{
     }
 
     private void notificationMsg(long userId, String msg, List<Homework> newHomeworks) {
-        HomeworkStatusesBot bot = HomeworkStatusesBot.builder()
-                .botUsername(botUsername)
-                .botToken(botToken)
-                .botPath(botPath)
-                .build();
         SendMessage message = new SendMessage();
         if (userRepository.findById(userId).isPresent()) {
             message.setChatId(userRepository.findById(userId).get().getChatId());

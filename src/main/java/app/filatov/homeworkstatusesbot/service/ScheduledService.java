@@ -35,6 +35,7 @@ public class ScheduledService {
                 // Их домашние задания
                 .peek(user -> log.info("Получаем домашние задания для пользователя с id={}", user.getId()))
                 .forEach(user -> {
+
                     try {
                         // Сохраняем в базу
                         List<Homework> homeworks = loaderService.getHomeworks(user);
