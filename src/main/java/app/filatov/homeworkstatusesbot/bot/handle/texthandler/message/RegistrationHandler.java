@@ -1,6 +1,7 @@
 package app.filatov.homeworkstatusesbot.bot.handle.texthandler.message;
 
 import app.filatov.homeworkstatusesbot.bot.handle.language.LanguageSupplier;
+import app.filatov.homeworkstatusesbot.bot.handle.texthandler.ReplyKeyboardMaker;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.state.UserState;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.util.HandlerUtil;
 import app.filatov.homeworkstatusesbot.exception.UserNotFoundException;
@@ -24,15 +25,19 @@ public class RegistrationHandler implements MessageHandler {
     private final MessageService messageService;
 
     private final LanguageSupplier languageSupplier;
+    private final ReplyKeyboardMaker replyKeyboardMaker;
 
     public RegistrationHandler(HandlerUtil util,
                                UserRepository userRepository,
-                               LoaderService loaderService, MessageService messageService, LanguageSupplier languageSupplier) {
+                               LoaderService loaderService, MessageService messageService,
+                               LanguageSupplier languageSupplier,
+                               ReplyKeyboardMaker replyKeyboardMaker) {
         this.util = util;
         this.userRepository = userRepository;
         this.loaderService = loaderService;
         this.messageService = messageService;
         this.languageSupplier = languageSupplier;
+        this.replyKeyboardMaker = replyKeyboardMaker;
     }
 
     @Override
@@ -44,11 +49,15 @@ public class RegistrationHandler implements MessageHandler {
         }
         User user = optional.get();
 
+        String language = languageSupplier.getLanguage(message);
         if (util.hasApiKey(user)) {
             util.setCorrectStateForUser(user);
-            return new SendMessage(String.valueOf(chatId),
+
+            SendMessage sendMessage = new SendMessage(String.valueOf(chatId),
                     messageService.getMessage("message.registration.key.warning",
-                            languageSupplier.getLanguage(message)));
+                            language));
+            sendMessage.setReplyMarkup(replyKeyboardMaker.getHomeworkMenuKeyBoard(language));
+            return sendMessage;
         }
 
         if (user.getState() == UserState.REGISTRATION) {
@@ -59,9 +68,11 @@ public class RegistrationHandler implements MessageHandler {
         if (user.getState() == UserState.ASK_API_KEY) {
             user.setState(UserState.CHECK_API_KEY);
             userRepository.save(user);
-            return new SendMessage(String.valueOf(chatId),
+            SendMessage sendMessage = new SendMessage(String.valueOf(chatId),
                     messageService.getMessage("message.registration.key.enter",
-                            languageSupplier.getLanguage(message)));
+                            language));
+            sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard(language));
+            return sendMessage;
         }
 
         if (user.getState() == UserState.CHECK_API_KEY) {
@@ -70,17 +81,21 @@ public class RegistrationHandler implements MessageHandler {
                 loaderService.getHomeworks(user);
             } catch (Exception e) {
                 user.setState(UserState.ASK_API_KEY);
-                return new SendMessage(String.valueOf(chatId),
+                SendMessage sendMessage = new SendMessage(String.valueOf(chatId),
                         messageService.getMessage("message.registration.key.incorrect",
-                        languageSupplier.getLanguage(message)));
+                                language));
+                sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard(language));
+                return sendMessage;
             }
             user.setState(UserState.READY);
             userRepository.save(user);
         }
 
-        return new SendMessage(String.valueOf(chatId),
+        SendMessage sendMessage = new SendMessage(String.valueOf(chatId),
                 messageService.getMessage("message.registration.key.complete",
-                languageSupplier.getLanguage(message)));
+                        language));
+        sendMessage.setReplyMarkup(replyKeyboardMaker.getHomeworkMenuKeyBoard(language));
+        return sendMessage;
     }
 
     @Override
