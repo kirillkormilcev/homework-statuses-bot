@@ -5,11 +5,13 @@ import app.filatov.homeworkstatusesbot.bot.handle.language.LanguageSupplier;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.state.UserState;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.util.HandlerUtil;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
+@RequiredArgsConstructor
 public class HelpHandler implements MessageHandler {
 
     private final HandlerUtil util;
@@ -17,18 +19,6 @@ public class HelpHandler implements MessageHandler {
     private final MessageService messageService;
     private final LanguageSupplier languageSupplier;
     private final KeyboardSupplier keyboardSupplier;
-
-    public HelpHandler(HandlerUtil util,
-                       UserRepository userRepository,
-                       MessageService messageService,
-                       LanguageSupplier languageSupplier,
-                       KeyboardSupplier keyboardSupplier) {
-        this.util = util;
-        this.userRepository = userRepository;
-        this.messageService = messageService;
-        this.languageSupplier = languageSupplier;
-        this.keyboardSupplier = keyboardSupplier;
-    }
 
     @Override
     public SendMessage handle(Message message) {

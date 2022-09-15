@@ -22,7 +22,6 @@ public class ReplyKeyboardMaker {
 
     final MessageService messageService;
 
-
     public ReplyKeyboardMarkup getHomeworkMenuKeyBoard(String language) {
         KeyboardRow row1 = new KeyboardRow();
         KeyboardButton checkUpdates = new KeyboardButton();

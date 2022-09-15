@@ -1,5 +1,7 @@
 package app.filatov.homeworkstatusesbot.bot.handle.texthandler;
 
+import app.filatov.homeworkstatusesbot.bot.handle.language.LanguageSupplier;
+import app.filatov.homeworkstatusesbot.bot.handle.texthandler.message.MessageService;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.state.StateRouter;
 import app.filatov.homeworkstatusesbot.bot.handle.texthandler.state.UserState;
 import app.filatov.homeworkstatusesbot.model.Setting;
@@ -7,6 +9,7 @@ import app.filatov.homeworkstatusesbot.model.SettingCompositeKey;
 import app.filatov.homeworkstatusesbot.model.User;
 import app.filatov.homeworkstatusesbot.model.repository.SettingRepository;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -14,18 +17,13 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class TextMessageHandler {
     private final UserRepository userRepository;
     private final SettingRepository settingRepository;
     private final StateRouter stateRouter;
-
-    public TextMessageHandler(UserRepository userRepository,
-                              SettingRepository settingRepository,
-                              StateRouter stateRouter) {
-        this.userRepository = userRepository;
-        this.settingRepository = settingRepository;
-        this.stateRouter = stateRouter;
-    }
+    private final MessageService messageService;
+    private final LanguageSupplier languageSupplier;
 
     public BotApiMethod<?> textMessageProvide(Message message) {
         String text = message.getText();
@@ -56,14 +54,15 @@ public class TextMessageHandler {
                     return newUser;
                 }
         );
-
-        UserState state = switch (text) {
-            case "/start" -> UserState.REGISTRATION;
-            case "/settings" -> UserState.SETTINGS;
-            case "/help" -> UserState.HELP;
-            default -> user.getState();
-        };
-
+        UserState state = user.getState();
+        String language = languageSupplier.getLanguage(message);
+        if (text.equals(messageService.getMessage("message.menu.buttons.start", language))) {
+            state = UserState.REGISTRATION;
+        } else if (text.equals(messageService.getMessage("message.menu.buttons.settings", language))) {
+            state = UserState.SETTINGS;
+        } else if (text.equals(messageService.getMessage("message.menu.buttons.help", language))) {
+            state = UserState.HELP;
+        }
         user.setState(state);
         userRepository.save(user);
 

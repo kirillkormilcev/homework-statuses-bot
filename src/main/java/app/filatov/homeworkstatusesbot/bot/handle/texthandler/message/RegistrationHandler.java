@@ -8,6 +8,7 @@ import app.filatov.homeworkstatusesbot.exception.UserNotFoundException;
 import app.filatov.homeworkstatusesbot.model.User;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
 import app.filatov.homeworkstatusesbot.service.loader.LoaderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -15,30 +16,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class RegistrationHandler implements MessageHandler {
     private final HandlerUtil util;
 
     private final UserRepository userRepository;
-
     private final LoaderService loaderService;
-
     private final MessageService messageService;
-
     private final LanguageSupplier languageSupplier;
     private final ReplyKeyboardMaker replyKeyboardMaker;
-
-    public RegistrationHandler(HandlerUtil util,
-                               UserRepository userRepository,
-                               LoaderService loaderService, MessageService messageService,
-                               LanguageSupplier languageSupplier,
-                               ReplyKeyboardMaker replyKeyboardMaker) {
-        this.util = util;
-        this.userRepository = userRepository;
-        this.loaderService = loaderService;
-        this.messageService = messageService;
-        this.languageSupplier = languageSupplier;
-        this.replyKeyboardMaker = replyKeyboardMaker;
-    }
 
     @Override
     public SendMessage handle(Message message) {
