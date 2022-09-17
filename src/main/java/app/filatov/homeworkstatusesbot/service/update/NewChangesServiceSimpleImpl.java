@@ -46,6 +46,7 @@ public class NewChangesServiceSimpleImpl implements NewChangesService{
                 System.out.println(homework.toString());
             }
             notificationMsg(userId, "Появились новые домашние работы: ", newHomeworks);
+            return;
         }
         if (!homeworksOld.equals(homeworks)) {
             log.info("Изменения в домашних работах");
