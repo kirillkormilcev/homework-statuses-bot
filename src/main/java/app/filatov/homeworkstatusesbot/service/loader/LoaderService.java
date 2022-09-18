@@ -23,7 +23,6 @@ public class LoaderService {
                 .stream()
                 .map(homeworkDto -> modelMapper.map(homeworkDto, Homework.class))
                 .peek(homework -> homework.setUser(user))
-                .peek(homework -> homework.setHash(homework.hashCode()))
                 .toList();
     }
 }
