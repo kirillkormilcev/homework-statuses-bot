@@ -1,12 +1,14 @@
 package app.filatov.homeworkstatusesbot.service.update;
 
 import app.filatov.homeworkstatusesbot.bot.HomeworkStatusesBot;
+import app.filatov.homeworkstatusesbot.dto.HomeworkDto;
 import app.filatov.homeworkstatusesbot.exception.UserNotFoundException;
 import app.filatov.homeworkstatusesbot.model.Homework;
 import app.filatov.homeworkstatusesbot.model.repository.HomeworkRepository;
 import app.filatov.homeworkstatusesbot.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -22,6 +24,7 @@ public class NewChangesServiceSimpleImpl implements NewChangesService {
     private final HomeworkRepository homeworkRepository;
     private final UserRepository userRepository;
     private final HomeworkStatusesBot bot;
+    private final ModelMapper modelMapper;
 
     @Override
     public void checkChangesInHomeworks(List<Homework> homeworks, long userId) {
@@ -55,8 +58,11 @@ public class NewChangesServiceSimpleImpl implements NewChangesService {
 
     private String listToString(List<Homework> homeworks) {
         StringBuilder listToString = new StringBuilder();
-        for (Homework homework : homeworks) {
-            listToString.append(homework.toString());
+        List<HomeworkDto> homeworksDto = homeworks.stream()
+                .map(homework -> modelMapper.map(homework, HomeworkDto.class))
+                .toList();
+        for (HomeworkDto homeworkDto : homeworksDto) {
+            listToString.append(homeworkDto.toString()).append("\n");
         }
         return listToString.toString();
     }

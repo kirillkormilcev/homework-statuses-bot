@@ -29,4 +29,11 @@ public class HomeworkDto {
     @JsonCreator
     public HomeworkDto() {
     }
+    @Override
+    public String toString() {
+        return "\u279F" + "  Домашняя работа: " + homeworkName + "\n" +
+                "\u02D9" + "  статус: " + status + "\n" +
+                "\u02D9" + "  комментарий ревьюера: " + reviewerComment + "\n" +
+                "\u02D9" + "  обновлено: " + dateUpdated + "." + "\n";
+    }
 }
