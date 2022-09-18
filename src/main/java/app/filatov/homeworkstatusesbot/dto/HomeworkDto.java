@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -31,9 +32,9 @@ public class HomeworkDto {
     }
     @Override
     public String toString() {
-        return "\u279F" + "  Домашняя работа: " + homeworkName + "\n" +
-                "\u02D9" + "  статус: " + status + "\n" +
-                "\u02D9" + "  комментарий ревьюера: " + reviewerComment + "\n" +
-                "\u02D9" + "  обновлено: " + dateUpdated + "." + "\n";
+        return "\u25BA" + "  Домашняя работа: " + homeworkName + "\n" +
+                "\u25B7" + "  статус: " + status + "\n" +
+                "\u25B7" + "  комментарий ревьюера: " + reviewerComment + "\n" +
+                "\u25B7" + "  обновлено: " + dateUpdated.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm")) + "." + "\n";
     }
 }

@@ -33,7 +33,7 @@ public class NewChangesServiceSimpleImpl implements NewChangesService {
         if (homeworksOld.size() < homeworks.size()) {
             log.info("Появилась новые домашние работы");
             newHomeworks.removeAll(homeworksOld);
-            notificationMsg(userId, "Появились новые домашние работы: ", newHomeworks);
+            notificationMsg(userId, "Появились новые домашние работы (" + newHomeworks.size() + " шт): ", newHomeworks);
             return;
         }
         if (!homeworksOld.equals(homeworks)) {
