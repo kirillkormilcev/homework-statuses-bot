@@ -21,21 +21,12 @@ public class ScheduledService {
     private final HomeworkRepository homeworkRepository;
     private final NewChangesService newChangesService;
 
-    /*public ScheduledService(LoaderService loaderService,
-                            UserRepository userRepository,
-                            HomeworkRepository homeworkRepository) {
-        this.loaderService = loaderService;
-        this.userRepository = userRepository;
-        this.homeworkRepository = homeworkRepository;
-    }*/
-
     @Scheduled(fixedRate = 60_000)
     public void updateHomeworkStatus() {
         userRepository.findReadyToUpdateUser().stream()
                 // Их домашние задания
                 .peek(user -> log.info("Получаем домашние задания для пользователя с id={}", user.getId()))
                 .forEach(user -> {
-
                     try {
                         // Сохраняем в базу
                         List<Homework> homeworks = loaderService.getHomeworks(user);
