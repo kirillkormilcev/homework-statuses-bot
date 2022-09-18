@@ -15,11 +15,11 @@ public class MessageService {
         this.messageSource = messageSource;
         this.locale = Locale.forLanguageTag(localeProperties.getTag());
     }
-
+    
     public String getMessage(String message, String languageCode) {
         if (Arrays.stream(Locale.getAvailableLocales())
-                .map(Locale::toLanguageTag)
-                .toList().contains(languageCode)) {
+                  .map(Locale::toLanguageTag)
+                  .toList().contains(languageCode)) {
             String sourceMessage = messageSource.getMessage(message, null, new Locale.Builder()
                     .setLanguageTag(languageCode)
                     .build());
