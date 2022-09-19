@@ -1,6 +1,8 @@
 package app.filatov.homeworkstatusesbot.bot.config;
 
 import app.filatov.homeworkstatusesbot.bot.HomeworkStatusesBot;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -52,6 +54,13 @@ public class TelegramBotConfig implements SchedulingConfigurer {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper;
     }
 
     @Bean

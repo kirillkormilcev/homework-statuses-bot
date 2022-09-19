@@ -101,4 +101,13 @@ public class KeyboardSupplier {
 
         return settingsKeyboardMarkup;
     }
+
+    public InlineKeyboardMarkup recallApiKeyMarkup(String language) {
+        InlineKeyboardMarkup recallApiKeyMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton recallApiKeyButton = new InlineKeyboardButton();
+        recallApiKeyButton.setText(messageService.getMessage("message.setting.buttons.recallKey", language));
+        recallApiKeyButton.setCallbackData("RECALL_API_KEY");
+        recallApiKeyMarkup.setKeyboard(List.of(List.of(recallApiKeyButton)));
+        return recallApiKeyMarkup;
+    }
 }
