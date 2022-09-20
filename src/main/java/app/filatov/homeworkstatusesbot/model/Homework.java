@@ -42,14 +42,20 @@ public class Homework {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Homework homework = (Homework) o;
-
-        return Objects.equals(id, homework.id);
+        return Objects.equals(id, homework.id) && Objects.equals(status, homework.status) && Objects.equals(reviewerComment, homework.reviewerComment);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hash(id, status, reviewerComment);
+    }
+
+    @Override
+    public String toString() {
+        return "Домашняя работа " + homeworkName + "\n" +
+                "статус: " + status + "\n" +
+                "комментарий ревьюера: " + reviewerComment + "\n" +
+                "обновлено: " + dateUpdated + "." + "\n";
     }
 }

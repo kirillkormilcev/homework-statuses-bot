@@ -36,6 +36,7 @@ public class TextMessageHandler {
                             .firstName(message.getFrom().getFirstName())
                             .lastName(message.getFrom().getLastName())
                             .userName(message.getFrom().getUserName())
+                            .chatId(message.getChatId())
                             .state(UserState.REGISTRATION)
                             .build());
                     // Сохраняем по умолчанию настройки для пользователя
